@@ -296,6 +296,18 @@ function calculate() {
 createPresets();
 calculate();
 </script>
-
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register(
+            "/GarantiCoilApp/service-worker.js"
+        ).then(registration => {
+            console.log("App service worker registered:", registration.scope);
+        }).catch(error => {
+            console.error("Service worker registration failed:", error);
+        });
+    });
+}
+</script>
 </body>
 </html>
