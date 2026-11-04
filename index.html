@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coil Length Calculator</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f1f4f8;
+  color: #1e293b;
+}
+
+.container {
+  max-width: 460px;
+  margin: 30px auto;
+  padding: 25px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 5px 25px #00000012;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.factory-logo {
+    display: block;
+    max-width: 180px;
+    max-height: 90px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 10px auto 20px;
+}
+
+.header h2 {
+  margin-bottom: 5px;
+  color: #17365d;
+}
+
+.header p {
+  color: #64748b;
+  font-size: 13px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 18px 0 9px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  font-size: 19px;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.presets button {
+  padding: 12px 3px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.presets button.active {
+  background: #17365d;
+  color: white;
+  border-color: #17365d;
+}
+
+.result {
+  margin-top: 25px;
+  padding: 22px;
+  text-align: center;
+  background: #eaf4ff;
+  border-radius: 12px;
+}
+
+.result p {
+  margin: 0;
+  color: #475569;
+}
+
+.result h1 {
+  margin: 12px 0 0;
+  color: #087443;
+  font-size: 38px;
+}
+
+.info {
+  margin-top: 20px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.language {
+  text-align: right;
+}
+
+.language button {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="language">
+    <button onclick="setLanguage('tr')">TR</button>
+    <button onclick="setLanguage('en')">EN</button>
+  </div>
+
+  <div class="header">
+
+    <img src="logo.png"
+         alt="Factory Logo"
+         class="factory-logo">
+
+    <h2 id="title">BOBİN METRAJ HESAPLAMA</h2>
+    <p id="subtitle">Kalan sac uzunluğu hesaplama</p>
+
+</div>
+
+  <label id="thicknessLabel">Sac kalınlığı (mm)</label>
+
+  <div class="presets" id="presets"></div>
+
+  <input
+    id="thickness"
+    type="number"
+    value="0.50"
+    min="0.01"
+    step="0.01"
+    oninput="calculate()"
+  >
+
+  <label id="measurementLabel">
+    Kalan sarım kalınlığı (cm)
+  </label>
+
+  <input
+    id="measurement"
+    type="number"
+    value="2"
+    min="0"
+    step="0.01"
+    oninput="calculate()"
+  >
+
+  <div class="result">
+    <p id="resultLabel">KALAN METRAJ</p>
+    <h1 id="result">65.35 m</h1>
+  </div>
+
+  <div class="info">
+    <div id="innerDiameter">
+      Sabit iç çap: 50 cm
+    </div>
+    <div id="measurementInfo">
+      Ölçüm: İç çekirdekten dış sarım kenarına kadar.
+    </div>
+  </div>
+
+</div>
+
+<script>
+const innerDiameterCm = 50;
+
+const thicknessOptions = [
+  "0.20", "0.25", "0.30", "0.35",
+  "0.40", "0.45", "0.47", "0.50"
+];
+
+let language = "tr";
+
+const translations = {
+  tr: {
+    title: "BOBİN METRAJ HESAPLAMA",
+    subtitle: "Kalan sac uzunluğu hesaplama",
+    thickness: "Sac kalınlığı (mm)",
+    measurement: "Kalan sarım kalınlığı (cm)",
+    result: "KALAN METRAJ",
+    inner: "Sabit iç çap: 50 cm",
+    info: "Ölçüm: İç çekirdekten dış sarım kenarına kadar.",
+    error: "Geçerli değerleri giriniz"
+  },
+  en: {
+    title: "COIL LENGTH CALCULATOR",
+    subtitle: "Remaining metal sheet length",
+    thickness: "Metal thickness (mm)",
+    measurement: "Remaining coil thickness (cm)",
+    result: "REMAINING LENGTH",
+    inner: "Fixed inner diameter: 50 cm",
+    info: "Measure from the core surface to the outer coil edge.",
+    error: "Please enter valid values"
+  }
+};
+
+function setLanguage(lang) {
+  language = lang;
+  const t = translations[lang];
+
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("subtitle").textContent = t.subtitle;
+  document.getElementById("thicknessLabel").textContent = t.thickness;
+  document.getElementById("measurementLabel").textContent = t.measurement;
+  document.getElementById("resultLabel").textContent = t.result;
+  document.getElementById("innerDiameter").textContent = t.inner;
+  document.getElementById("measurementInfo").textContent = t.info;
+
+  calculate();
+}
+
+function createPresets() {
+  const container = document.getElementById("presets");
+
+  thicknessOptions.forEach(value => {
+    const button = document.createElement("button");
+    button.textContent = value;
+    button.onclick = () => {
+      document.getElementById("thickness").value = value;
+      calculate();
+    };
+    container.appendChild(button);
+  });
+}
+
+function calculate() {
+  const thickness = Number(
+    document.getElementById("thickness").value
+  );
+
+  const h = Number(
+    document.getElementById("measurement").value
+  );
+
+  const resultElement = document.getElementById("result");
+
+  if (!Number.isFinite(thickness) ||
+      !Number.isFinite(h) ||
+      thickness <= 0 ||
+      h <= 0) {
+    resultElement.textContent = translations[language].error;
+    return;
+  }
+
+  // Result in metres.
+  // h is in cm, thickness is in mm.
+  const length =
+    Math.PI * h * (h + innerDiameterCm) /
+    (10 * thickness);
+
+  resultElement.textContent =
+    length.toLocaleString(
+      language === "tr" ? "tr-TR" : "en-US",
+      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    ) + " m";
+
+  document.querySelectorAll(".presets button").forEach(button => {
+    button.classList.toggle(
+      "active",
+      Number(button.textContent) === thickness
+    );
+  });
+}
+
+createPresets();
+calculate();
+</script>
+
+</body>
+</html>
