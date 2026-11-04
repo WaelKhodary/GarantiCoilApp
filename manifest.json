@@ -1,0 +1,22 @@
+{
+  "name": "Garanti Coil Calculator",
+  "short_name": "Coil Calc",
+  "description": "Garanti coil remaining length calculator",
+  "start_url": "/GarantiCoilApp/",
+  "scope": "/GarantiCoilApp/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/GarantiCoilApp/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/GarantiCoilApp/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
