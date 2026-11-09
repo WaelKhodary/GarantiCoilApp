@@ -9,6 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coil Length Calculator</title>
 
+
 <style>
 * {
   box-sizing: border-box;
@@ -76,6 +77,12 @@ input {
   gap: 8px;
 }
 
+.presetsKg {
+display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
 .presets button {
   padding: 12px 3px;
   border: 1px solid #cbd5e1;
@@ -85,12 +92,25 @@ input {
   font-weight: bold;
 }
 
+.presetsKg button {
+  padding: 12px 3px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
 .presets button.active {
   background: #17365d;
   color: white;
   border-color: #17365d;
 }
 
+.presetsKg button.active {
+  background: #17365d;
+  color: white;
+  border-color: #17365d;
+}
 .result {
   margin-top: 25px;
   padding: 22px;
@@ -99,9 +119,21 @@ input {
   border-radius: 12px;
 }
 
+.resultKg {
+  margin-top: 25px;
+  padding: 22px;
+  text-align: center;
+  background: #eaf4ff;
+  border-radius: 12px;
+}
 .result p {
   margin: 0;
   color: #475569;
+}
+
+.resultKg p{
+  margin: 0;
+  color: #696547;
 }
 
 .result h1 {
@@ -110,6 +142,11 @@ input {
   font-size: 38px;
 }
 
+.resultKg h1 {
+  margin: 12px 0 0;
+  color: #744908;
+  font-size: 38px;
+}
 .info {
   margin-top: 20px;
   color: #64748b;
@@ -127,6 +164,9 @@ input {
   border-radius: 6px;
   cursor: pointer;
 }
+
+
+
 </style>
 </head>
 
@@ -141,18 +181,18 @@ input {
 
   <div class="header">
 
-    <img src="logo.png"
+    <img src="images/logo.png"
          alt="Factory Logo"
          class="factory-logo">
 
     <h2 id="title">BOBİN METRAJ HESAPLAMA</h2>
-    <p id="subtitle">Kalan sac uzunluğu hesaplama</p>
+    <p id="subtitle">Kalan sac (uzunluğu / Kg) hesaplama</p>
 
 </div>
 
   <label id="thicknessLabel">Sac kalınlığı (mm)</label>
 
-  <div class="presets" id="presets"></div>
+  <div class="presets" id="presets"> </div>
 
   <input
     id="thickness"
@@ -166,6 +206,7 @@ input {
   <label id="measurementLabel">
     Kalan sarım kalınlığı (cm)
   </label>
+  
 
   <input
     id="measurement"
@@ -179,6 +220,28 @@ input {
   <div class="result">
     <p id="resultLabel">KALAN METRAJ</p>
     <h1 id="result">65.35 m</h1>
+  </div>
+
+  <div class="KgCalc">
+    
+    <label id= "measurementwidth">
+      Bobin Genişliği (mm)
+    </label>
+<div class="presetsKg" id="presetsKg"></div>
+    
+<input
+    id="width"
+    type="number"
+    value="1200"
+    min="1"
+    step="1"
+    oninput="calculate()"
+  >
+  </div>
+
+    <div class="resultKg">
+    <p id="resultLabelkg">KALAN KG</p>
+    <h1 id="resultkg">307.80 Kg</h1>
   </div>
 
   <div class="info">
@@ -200,25 +263,33 @@ const thicknessOptions = [
   "0.40", "0.45", "0.47", "0.50"
 ];
 
+const widthOptions = [
+  "1250", "1200", "1130", "1070"
+];
+
 let language = "tr";
 
 const translations = {
   tr: {
     title: "BOBİN METRAJ HESAPLAMA",
-    subtitle: "Kalan sac uzunluğu hesaplama",
+    subtitle: "Kalan sac (uzunluğu / Kg) hesaplama",
     thickness: "Sac kalınlığı (mm)",
+    width: "Bobin Genişliği (mm)",
     measurement: "Kalan sarım kalınlığı (cm)",
     result: "KALAN METRAJ",
+    resultkg: "KALAN KG",
     inner: "Sabit iç çap: 50 cm",
     info: "Ölçüm: İç çekirdekten dış sarım kenarına kadar.",
     error: "Geçerli değerleri giriniz"
   },
   en: {
     title: "COIL LENGTH CALCULATOR",
-    subtitle: "Remaining metal sheet length",
+    subtitle: "Remaining metal sheet (length / Kg)",
     thickness: "Metal thickness (mm)",
+    width: "Metal Sheet Width (mm)",
     measurement: "Remaining coil thickness (cm)",
     result: "REMAINING LENGTH",
+    resultkg: "REMAINING KG",
     inner: "Fixed inner diameter: 50 cm",
     info: "Measure from the core surface to the outer coil edge.",
     error: "Please enter valid values"
@@ -232,7 +303,9 @@ function setLanguage(lang) {
   document.getElementById("title").textContent = t.title;
   document.getElementById("subtitle").textContent = t.subtitle;
   document.getElementById("thicknessLabel").textContent = t.thickness;
+  document.getElementById("measurementwidth").textContent = t.width;
   document.getElementById("measurementLabel").textContent = t.measurement;
+  document.getElementById("resultLabelkg").textContent = t.resultkg;
   document.getElementById("resultLabel").textContent = t.result;
   document.getElementById("innerDiameter").textContent = t.inner;
   document.getElementById("measurementInfo").textContent = t.info;
@@ -254,9 +327,28 @@ function createPresets() {
   });
 }
 
+function createPresetsKg() {
+  const container = document.getElementById("presetsKg");
+
+  widthOptions.forEach(value => {
+    const button = document.createElement("button");
+    button.textContent = value;
+    button.onclick = () => {
+      document.getElementById("width").value = value;
+      calculate();
+    };
+    container.appendChild(button);
+  });
+}
+
+
 function calculate() {
   const thickness = Number(
     document.getElementById("thickness").value
+  );
+
+  const width = Number(
+    document.getElementById("width").value
   );
 
   const h = Number(
@@ -264,11 +356,14 @@ function calculate() {
   );
 
   const resultElement = document.getElementById("result");
+  const resultElementkg = document.getElementById("resultkg");
 
   if (!Number.isFinite(thickness) ||
-      !Number.isFinite(h) ||
-      thickness <= 0 ||
-      h <= 0) {
+    !Number.isFinite(h) ||
+    !Number.isFinite(width) ||
+    thickness <= 0 ||
+    h <= 0 ||
+    width <= 0) {
     resultElement.textContent = translations[language].error;
     return;
   }
@@ -279,11 +374,19 @@ function calculate() {
     Math.PI * h * (h + innerDiameterCm) /
     (10 * thickness);
 
+const kg = length * thickness*7.85 *(width/1000);
+
   resultElement.textContent =
     length.toLocaleString(
       language === "tr" ? "tr-TR" : "en-US",
       { minimumFractionDigits: 2, maximumFractionDigits: 2 }
     ) + " m";
+
+resultElementkg.textContent =
+    kg.toLocaleString(
+        language === "tr" ? "tr-TR" : "en-US",
+        { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    ) + " Kg";
 
   document.querySelectorAll(".presets button").forEach(button => {
     button.classList.toggle(
@@ -291,23 +394,17 @@ function calculate() {
       Number(button.textContent) === thickness
     );
   });
+  document.querySelectorAll(".presetsKg button").forEach(button => {
+    button.classList.toggle(
+        "active",
+        Number(button.textContent) === width
+    );
+});
 }
 
 createPresets();
+createPresetsKg();
 calculate();
-</script>
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register(
-            "/GarantiCoilApp/service-worker.js"
-        ).then(registration => {
-            console.log("App service worker registered:", registration.scope);
-        }).catch(error => {
-            console.error("Service worker registration failed:", error);
-        });
-    });
-}
 </script>
 </body>
 </html>
