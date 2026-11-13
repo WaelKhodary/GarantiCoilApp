@@ -5,6 +5,8 @@ const APP_BASE = "/GarantiCoilApp/";
 const FILES_TO_CACHE = [
     APP_BASE,
     APP_BASE + "index.html",
+    APP_BASE + "chemical.html",
+    APP_BASE + "pricecalc.html",
     APP_BASE + "manifest.json",
     APP_BASE + "icon-192.png",
     APP_BASE + "icon-512.png"
