@@ -282,10 +282,10 @@ input:focus {
         </div>
 
         <div class="mainmenu">
-            <button onclick="location.href='index.html'">
+            <button onclick="location.href='index.html'" data-i18n="back">
                 Sac Hesaplama
             </button>
- <button onclick="document.location='chemical.html'">
+ <button onclick="document.location='Chemical.html'">
                 Kimyasal hesaplama
             </button>
 
@@ -371,7 +371,7 @@ input:focus {
                 <label data-i18n="chemicalPrice">Fiyat ($/kg)</label>
                 <input id="chemicprice"
                        type="number"
-                       value="3"
+                       value="2.6"
                        min="0"
                        step="0.01"
                        oninput="calculate()">
@@ -437,7 +437,7 @@ input:focus {
                     <label data-i18n="priceTon">Fiyat ($/Ton)</label>
                     <input id="lowerprice"
                            type="number"
-                           value="1100"
+                           value="1200"
                            min="0"
                            step="1"
                            oninput="calculate()">
@@ -796,18 +796,18 @@ function calculate() {
         totalVolume * density;
 
     const chemicalCost =
-        chemicalWeight * chemicalPrice;
+        chemicalWeight * (chemicalPrice * 1.20);
 
 
     // Steel calculation
 
     const upperSteelCost =
         upperSize * steelCoefficient * 7.85 *
-        upperPrice / 1000;
+        upperPrice*1.20 / 1000;
 
     const lowerSteelCost =
         lowerSize * steelCoefficient * 7.85 *
-        lowerPrice / 1000;
+        (lowerPrice*1.20) / 1000;
 
 
     // Final price
