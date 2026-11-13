@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GarantiPanel Price Calculator</title>
+
+<style>
+:root {
+    --primary: #17365d;
+    --primary-light: #eaf1fa;
+    --accent: #2878c8;
+    --background: #f1f4f8;
+    --white: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #dce3ec;
+    --green: #087443;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+.container {
+    max-width: 540px;
+    margin: 20px auto;
+    padding: 24px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 5px 25px #00000010;
+}
+
+/* TOP MENU */
+
+.top-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.language, .mainmenu {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.top-menu button {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--primary);
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.top-menu button:hover {
+    background: var(--primary-light);
+}
+
+/* HEADER */
+
+.header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.factory-logo {
+    display: block;
+    max-width: 180px;
+    max-height: 85px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 10px auto 18px;
+}
+
+.header h2 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 23px;
+}
+
+.header p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* SECTIONS */
+
+.section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 13px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    color: #475569;
+    margin-bottom: 7px;
+}
+
+/* PRODUCT BUTTONS */
+
+.presetspro {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+}
+
+.presetspro button {
+    min-height: 45px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    color: var(--text);
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.presetspro button.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 3px 9px #17365d30;
+}
+
+/* THICKNESS BUTTONS */
+
+.presets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.presets button {
+    padding: 12px 5px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.presets button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 3px 9px #2878c830;
+}
+
+.presets button:hover,
+.presetspro button:hover {
+    border-color: var(--accent);
+}
+
+/* INPUTS */
+
+.field {
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text);
+    background: #ffffff;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px #2878c81a;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* SELECTED PRODUCT */
+
+.selected-info {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--primary-light);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--primary);
+}
+
+/* RESULT */
+
+.result {
+    margin-top: 25px;
+    padding: 24px 15px;
+    text-align: center;
+    background: #edf6f1;
+    border: 1px solid #d3e9dc;
+    border-radius: 12px;
+}
+
+.result p {
+    margin: 0;
+    color: #426b55;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.result h1 {
+    margin: 12px 0 0;
+    color: var(--green);
+    font-size: 36px;
+}
+
+.result small {
+    display: block;
+    margin-top: 7px;
+    color: var(--muted);
+}
+
+@media (max-width: 400px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    .header h2 {
+        font-size: 20px;
+    }
+
+    .result h1 {
+        font-size: 30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- TOP MENU -->
+    <div class="top-menu">
+
+        <div class="language">
+            <button onclick="setLanguage('tr')">TR</button>
+            <button onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="mainmenu">
+            <button onclick="location.href='index.html'" data-i18n="back">
+                Sac Hesaplama
+            </button>
+ <button onclick="document.location='Chemical.html'">
+                Kimyasal hesaplama
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <img src="images/logo.png"
+             alt="Factory Logo"
+             class="factory-logo">
+
+        <h2 data-i18n="title">FİYAT HESAPLAMA</h2>
+
+        <p data-i18n="subtitle">
+            Ürün özelliklerine göre fiyat hesaplama
+        </p>
+
+    </div>
+
+    <!-- PRODUCT SELECTION -->
+    <div class="section">
+
+        <div class="section-title" data-i18n="product">
+            Ürün Tipi
+        </div>
+
+        <div class="presetspro" id="presetspro"></div>
+
+        <div class="selected-info">
+            <span data-i18n="selectedProduct">Seçilen Ürün:</span>
+            <strong id="selectedpro">3 Hadve</strong>
+        </div>
+
+    </div>
+
+    <!-- THICKNESS -->
+    <div class="section">
+
+        <div class="section-title" data-i18n="thickness">
+            Panel Kalınlığı
+        </div>
+
+        <div class="presets" id="presets"></div>
+
+        <div class="field">
+            <label data-i18n="manualThickness">
+                Manuel Kalınlık (mm)
+            </label>
+
+            <input id="thickness"
+                   type="number"
+                   value="40"
+                   min="1"
+                   step="1"
+                   oninput="calculate()">
+        </div>
+
+    </div>
+
+    <!-- CHEMICAL -->
+    <div class="section">
+
+        <div class="section-title" data-i18n="chemical">
+            Kimyasal Bilgileri
+        </div>
+
+        <div class="input-grid">
+
+            <div class="field">
+                <label data-i18n="density">Yoğunluk (kg/m³)</label>
+                <input id="density"
+                       type="number"
+                       value="28"
+                       min="1"
+                       step="1"
+                       oninput="calculate()">
+            </div>
+
+            <div class="field">
+                <label data-i18n="chemicalPrice">Fiyat ($/kg)</label>
+                <input id="chemicprice"
+                       type="number"
+                       value="3"
+                       min="0"
+                       step="0.01"
+                       oninput="calculate()">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- STEEL -->
+    <div class="section">
+
+        <div class="section-title" data-i18n="steel">
+            Sac Bilgileri
+        </div>
+
+        <div class="field">
+
+            <label data-i18n="upperSteel">Üst Sac</label>
+
+            <div class="input-grid">
+
+                <div>
+                    <label data-i18n="thicknessMM">Kalınlık (mm)</label>
+                    <input id="uppersize"
+                           type="number"
+                           value="0.40"
+                           min="0.01"
+                           step="0.01"
+                           oninput="calculate()">
+                </div>
+
+                <div>
+                    <label data-i18n="priceTon">Fiyat ($/Ton)</label>
+                    <input id="upperprice"
+                           type="number"
+                           value="1030"
+                           min="0"
+                           step="1"
+                           oninput="calculate()">
+                </div>
+
+            </div>
+        </div>
+
+        <div class="field">
+
+            <label data-i18n="lowerSteel">Alt Sac</label>
+
+            <div class="input-grid">
+
+                <div>
+                    <label data-i18n="thicknessMM">Kalınlık (mm)</label>
+                    <input id="lowersize"
+                           type="number"
+                           value="0.30"
+                           min="0.01"
+                           step="0.01"
+                           oninput="calculate()">
+                </div>
+
+                <div>
+                    <label data-i18n="priceTon">Fiyat ($/Ton)</label>
+                    <input id="lowerprice"
+                           type="number"
+                           value="1100"
+                           min="0"
+                           step="1"
+                           oninput="calculate()">
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PROFIT -->
+    <div class="section">
+
+        <div class="section-title" data-i18n="profitSection">
+            Kâr Bilgileri
+        </div>
+
+        <div class="field">
+
+            <label data-i18n="profit">Kâr ($/m²)</label>
+
+            <input id="profit"
+                   type="number"
+                   value="0.50"
+                   min="0"
+                   step="0.01"
+                   oninput="calculate()">
+
+        </div>
+
+    </div>
+
+    <!-- RESULT -->
+    <div class="result">
+
+        <p data-i18n="resultLabel">HESAPLANAN PANEL FİYATI</p>
+
+        <h1 id="result">0.00</h1>
+
+        <small>USD / m²</small>
+
+    </div>
+
+</div>
+
+<script>
+
+// =====================================
+// 1. PRODUCT AND THICKNESS OPTIONS
+// =====================================
+
+const thicknessOptions = [40, 50, 60, 80];
+
+const productOptions = [
+    { id: "3-hadve", tr: "3 Hadve", en: "3 Rib" },
+    { id: "5-hadve", tr: "5 Hadve", en: "5 Rib" },
+    { id: "cephe", tr: "Cephe", en: "Wall Panel" },
+    { id: "cold", tr: "Soğuk Odası", en: "Cold Room" }
+];
+
+let selectedProduct = "3-hadve";
+let currentLanguage = "tr";
+
+
+// =====================================
+// 2. LANGUAGE DICTIONARY
+// =====================================
+
+const translations = {
+
+    tr: {
+        back: "Sac Hesaplama",
+        title: "FİYAT HESAPLAMA",
+        subtitle: "Ürün özelliklerine göre fiyat hesaplama",
+        product: "Ürün Tipi",
+        selectedProduct: "Seçilen Ürün:",
+        thickness: "Panel Kalınlığı",
+        manualThickness: "Manuel Kalınlık (mm)",
+        chemical: "Kimyasal Bilgileri",
+        density: "Yoğunluk (kg/m³)",
+        chemicalPrice: "Fiyat ($/kg)",
+        steel: "Sac Bilgileri",
+        upperSteel: "Üst Sac",
+        lowerSteel: "Alt Sac",
+        thicknessMM: "Kalınlık (mm)",
+        priceTon: "Fiyat ($/Ton)",
+        profitSection: "Kâr Bilgileri",
+        profit: "Kâr ($/m²)",
+        resultLabel: "HESAPLANAN PANEL FİYATI"
+    },
+
+    en: {
+        back: "Sheet Calculator",
+        title: "PRICE CALCULATOR",
+        subtitle: "Price calculation according to product specifications",
+        product: "Product Type",
+        selectedProduct: "Selected Product:",
+        thickness: "Panel Thickness",
+        manualThickness: "Manual Thickness (mm)",
+        chemical: "Chemical Information",
+        density: "Density (kg/m³)",
+        chemicalPrice: "Price ($/kg)",
+        steel: "Steel Information",
+        upperSteel: "Upper Sheet",
+        lowerSteel: "Lower Sheet",
+        thicknessMM: "Thickness (mm)",
+        priceTon: "Price ($/Ton)",
+        profitSection: "Profit Information",
+        profit: "Profit ($/m²)",
+        resultLabel: "CALCULATED PANEL PRICE"
+    }
+
+};
+
+
+// =====================================
+// 3. LANGUAGE FUNCTION
+// =====================================
+
+function setLanguage(lang) {
+
+    currentLanguage = lang;
+
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll("[data-i18n]").forEach(element => {
+
+        const key = element.dataset.i18n;
+
+        element.textContent = translations[lang][key];
+
+    });
+
+    createPresetspro();
+
+    calculate();
+
+}
+
+
+// =====================================
+// 4. CREATE PRODUCT BUTTONS
+// =====================================
+
+function createPresetspro() {
+
+    const container = document.getElementById("presetspro");
+
+    container.innerHTML = "";
+
+    productOptions.forEach(product => {
+
+        const button = document.createElement("button");
+
+        button.textContent = product[currentLanguage];
+
+        button.classList.toggle(
+            "active",
+            product.id === selectedProduct
+        );
+
+        button.onclick = () => {
+
+            selectedProduct = product.id;
+
+            createPresetspro();
+
+            calculate();
+
+        };
+
+        container.appendChild(button);
+
+    });
+
+    const selected = productOptions.find(
+        product => product.id === selectedProduct
+    );
+
+    document.getElementById("selectedpro").textContent =
+        selected[currentLanguage];
+
+}
+
+
+// =====================================
+// 5. CREATE THICKNESS BUTTONS
+// =====================================
+
+function createPresets() {
+
+    const container = document.getElementById("presets");
+
+    container.innerHTML = "";
+
+    thicknessOptions.forEach(value => {
+
+        const button = document.createElement("button");
+
+        button.textContent = value;
+
+        button.classList.toggle(
+            "active",
+            Number(document.getElementById("thickness").value) === value
+        );
+
+        button.onclick = () => {
+
+            document.getElementById("thickness").value = value;
+
+            calculate();
+
+        };
+
+        container.appendChild(button);
+
+    });
+
+}
+
+
+// =====================================
+// 6. MAIN CALCULATION
+// =====================================
+
+function calculate() {
+
+    const thickness = Number(
+        document.getElementById("thickness").value
+    );
+
+    const density = Number(
+        document.getElementById("density").value
+    );
+
+    const chemicalPrice = Number(
+        document.getElementById("chemicprice").value
+    );
+
+    const upperSize = Number(
+        document.getElementById("uppersize").value
+    );
+
+    const upperPrice = Number(
+        document.getElementById("upperprice").value
+    );
+
+    const lowerSize = Number(
+        document.getElementById("lowersize").value
+    );
+
+    const lowerPrice = Number(
+        document.getElementById("lowerprice").value
+    );
+
+    const profit = Number(
+        document.getElementById("profit").value
+    );
+
+
+    // Update active thickness buttons
+
+    document.querySelectorAll(".presets button").forEach(button => {
+
+        button.classList.toggle(
+            "active",
+            Number(button.textContent) === thickness
+        );
+
+    });
+
+
+    // Update active product buttons
+
+    const selected = productOptions.find(
+        product => product.id === selectedProduct
+    );
+
+    document.querySelectorAll(".presetspro button").forEach(
+        (button, index) => {
+
+            button.classList.toggle(
+                "active",
+                productOptions[index].id === selectedProduct
+            );
+
+        }
+    );
+
+
+    // Check input values
+
+    const values = [
+        thickness, density, chemicalPrice,
+        upperSize, upperPrice,
+        lowerSize, lowerPrice, profit
+    ];
+
+    if (
+        values.some(value => !Number.isFinite(value)) ||
+        thickness <= 0 ||
+        density <= 0 ||
+        chemicalPrice < 0 ||
+        upperSize < 0 ||
+        upperPrice < 0 ||
+        lowerSize < 0 ||
+        lowerPrice < 0 ||
+        profit < 0
+    ) {
+
+        document.getElementById("result").textContent = "--";
+
+        return;
+
+    }
+
+
+    // Product coefficients
+
+    let volumeCoefficient = 0;
+    let steelCoefficient = 1;
+
+    switch (selectedProduct) {
+
+        case "cold":
+            volumeCoefficient = 0;
+            steelCoefficient = 1.06;
+            break;
+
+        case "cephe":
+            volumeCoefficient = 0.00135;
+            steelCoefficient = 1.18;
+            break;
+
+        case "3-hadve":
+            volumeCoefficient = 0.0027;
+            steelCoefficient = 1.13;
+            break;
+
+        case "5-hadve":
+            volumeCoefficient = 0.0054;
+            steelCoefficient = 1.20;
+            break;
+
+    }
+
+
+    // Chemical calculation
+
+    const thicknessMeters = thickness / 1000;
+
+    const totalVolume =
+        thicknessMeters + volumeCoefficient;
+
+    const chemicalWeight =
+        totalVolume * density;
+
+    const chemicalCost =
+        chemicalWeight * chemicalPrice;
+
+
+    // Steel calculation
+
+    const upperSteelCost =
+        upperSize * steelCoefficient * 7.85 *
+        upperPrice / 1000;
+
+    const lowerSteelCost =
+        lowerSize * steelCoefficient * 7.85 *
+        lowerPrice / 1000;
+
+
+    // Final price
+
+    const panelPrice =
+        chemicalCost +
+        upperSteelCost +
+        lowerSteelCost +
+        profit;
+
+
+    // Display result
+
+    document.getElementById("result").textContent =
+        panelPrice.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+}
+
+
+// =====================================
+// 7. INITIALIZE APPLICATION
+// =====================================
+
+createPresets();
+createPresetspro();
+calculate();
+
+</script>
+
+</body>
+</html>
