@@ -1,16 +1,22 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <link rel="manifest" href="/GarantiCoilApp/manifest.json">
-<meta name="theme-color" content="#111111">
-<link rel="apple-touch-icon" href="/GarantiCoilApp/icon-192.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coil Length Calculator</title>
 
-
 <style>
+  :root {
+    --primary: #17365d;
+    --primary-light: #eaf1fa;
+    --accent: #2878c8;
+    --background: #f1f4f8;
+    --white: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #dce3ec;
+    --green: #087443;
+}
 * {
   box-sizing: border-box;
 }
@@ -24,17 +30,43 @@ body {
 }
 
 .container {
-  max-width: 460px;
-  margin: 30px auto;
-  padding: 25px;
-  background: white;
-  border-radius: 18px;
-  box-shadow: 0 5px 25px #00000012;
+    max-width: 540px;
+    margin: 20px auto;
+    padding: 24px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 5px 25px #00000010;
 }
 
 .header {
   text-align: center;
   margin-bottom: 25px;
+}
+.header button {
+  padding: 12px 3px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.language, .mainmenu {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+.top-menu button {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--primary);
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.top-menu button:hover {
+    background: var(--primary-light);
 }
 
 .factory-logo {
@@ -154,8 +186,19 @@ display: grid;
   line-height: 1.7;
 }
 
-.language {
-  text-align: right;
+.top-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.language,
+.mainmenu {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
 }
 
 .language button {
@@ -165,7 +208,12 @@ display: grid;
   cursor: pointer;
 }
 
-
+.mainmenu button {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
 </style>
 </head>
@@ -174,18 +222,33 @@ display: grid;
 
 <div class="container">
 
-  <div class="language">
-    <button onclick="setLanguage('tr')">TR</button>
-    <button onclick="setLanguage('en')">EN</button>
-  </div>
+  <div class="top-menu">
+
+        <div class="language">
+            <button onclick="setLanguage('tr')">TR</button>
+            <button onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="mainmenu">
+          <button onclick="document.location='pricecalc.html'">
+                Fiyat hesaplama
+          </button>
+
+          <button onclick="document.location='Chemical.html'">
+                Kimyasal hesaplama
+            </button>
+            
+        </div>
+
+    </div>
 
   <div class="header">
 
-    <img src="logo.png"
+    <img src="images/logo.png"
          alt="Factory Logo"
          class="factory-logo">
 
-    <h2 id="title">BOBİN METRAJ HESAPLAMA</h2>
+    <P><h2 id="title">BOBİN METRAJ HESAPLAMA</h2>  </P>
     <p id="subtitle">Kalan sac (uzunluğu / Kg) hesaplama</p>
 
 </div>
@@ -400,11 +463,12 @@ resultElementkg.textContent =
         Number(button.textContent) === width
     );
 });
-}
+};
 
 createPresets();
 createPresetsKg();
 calculate();
 </script>
+
 </body>
 </html>
